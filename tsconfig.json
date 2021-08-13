@@ -14,12 +14,12 @@
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
-    "noUnusedLocals": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "preserveConstEnums": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
+    "declaration": true,
     "skipLibCheck": true,
     "sourceMap": true,
     "rootDir": "game",
@@ -47,6 +47,7 @@
         "rootDir": "src"
 	}
 }
+
 // ALL TSCONFIG PROPERTIES REFERENCE (from tsc --init)
 */
 // {
