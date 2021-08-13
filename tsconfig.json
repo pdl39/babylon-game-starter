@@ -1,19 +1,23 @@
 {
   "compilerOptions": {
     "target": "ES6",
-    "module": "commonjs",
     "lib": [
       "DOM",
-      "ES6"
+      "DOM.Iterable",
+      "ESNEXT"
     ],
+    "moduleResolution": "node",
     "watch": true,
     "jsx": "preserve",
     "sourceMap": true,
-    "rootDir": "src",
+    "rootDir": "game",
     "removeComments": true,
     "strict": true,
     "noImplicitAny": false,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "types": [
+      "babylonjs"
+    ]
   }
 }
 // {

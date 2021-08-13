@@ -6,7 +6,7 @@ const pk = require('./package.json');
 
 module.exports = {
   entry: {
-    app: path.resolve(appDir, 'src/app.ts')
+    app: path.resolve(appDir, pk.app)
   },
   resolve: {
     mainFields: ['browser', 'module', 'main'],
@@ -49,7 +49,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(appDir, 'src/index.html'),
+      template: path.resolve(appDir, pk.main),
       title: pk.name,
       favicon: pk.favicon,
     })
