@@ -6,6 +6,8 @@ const app = express();
 
 // WEBPACK-DEV-MIDDLEWARE (for development)
 if (process.env.NODE_ENV === 'development') {
+  // this won't run with 'npm run start:dev'.
+  // it will only run with 'npm run start:dev2'.
   console.log('WEBPACK-DEV-MIDDLEWARE RUNNING...');
 
   const webpack = require('webpack');

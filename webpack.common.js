@@ -1,19 +1,26 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const fs = require('fs');
 const path = require('path');
+const appDir = fs.realpathSync(process.cwd());
 const pk = require('./package.json');
 
 module.exports = {
   entry: {
-    app: path.resolve(__dirname, 'src/index.js')
+    app: path.resolve(appDir, 'src/app.ts')
   },
   resolve: {
     mainFields: ['browser', 'module', 'main'],
-    extensions: ['.js', '.json'],
+    extensions: ['.tsx', '.ts', '.js', '.json'],
     mainFiles: ['index'],
     modules: ['node_modules']
   },
   module: {
     rules: [
+      {
+        test: /\.tsx?$/i,
+        exclude: /node_modules/,
+        use: ["ts-loader"]
+      },
       {
         test: /\.m?jsx?$/i,
         exclude: /node_modules/,
@@ -30,19 +37,22 @@ module.exports = {
       },
       {
         test: /\.s?css$/i,
+        exclude: /node_modules/,
         use: ["style-loader", "css-loader"]
       },
       {
         test: /\.html$/i,
+        exclude: /node_modules/,
         use: ["html-loader"]
       }
     ]
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: 'src/index.html',
+      template: path.resolve(appDir, 'src/index.html'),
       title: pk.name,
       favicon: pk.favicon,
     })
-  ]
+  ],
+  appdir: appDir
 }
