@@ -45,7 +45,10 @@ module.exports = {
         exclude: /node_modules/,
         use: [
           {
-            loader: 'url-loader'
+            loader: 'url-loader',
+            options: {
+              limit: 8192 // bytes (files larger than this limit will fall back to file-loader)
+            }
           }
         ]
       },
