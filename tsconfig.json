@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES6",
+    "module": "ESNext",
     "lib": [
       "DOM",
       "DOM.Iterable",
@@ -9,17 +10,45 @@
     "moduleResolution": "node",
     "watch": true,
     "jsx": "preserve",
+    "removeComments": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "preserveConstEnums": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
     "sourceMap": true,
     "rootDir": "game",
-    "removeComments": true,
-    "strict": true,
-    "noImplicitAny": false,
-    "esModuleInterop": true,
     "types": [
       "babylonjs"
     ]
   }
 }
+// tsconfig.json from RaananW/babylonjs-webpack-es6 (for reference)
+/*
+{
+	"compilerOptions": {
+        "module": "esNext",
+		"target": "es5",
+		"moduleResolution": "node",
+		"strict": true,
+		"noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "skipLibCheck": true,
+		"preserveConstEnums":true,
+        "sourceMap": true,
+        "rootDir": "src"
+	}
+}
+// ALL TSCONFIG PROPERTIES REFERENCE (from tsc --init)
+*/
 // {
 // "compilerOptions": {
 /* Visit https://aka.ms/tsconfig.json to read more about this file */
