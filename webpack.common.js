@@ -6,7 +6,7 @@ const pk = require('./package.json');
 
 module.exports = {
   entry: {
-    app: path.resolve(appDir, 'src/app.ts')
+    main: path.resolve(appDir, pk.main)
   },
   resolve: {
     mainFields: ['browser', 'module', 'main'],
@@ -41,6 +41,15 @@ module.exports = {
         use: ["style-loader", "css-loader"]
       },
       {
+        test: /\.(png|jpg|gif|env|glb|stl)$/i,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'url-loader'
+          }
+        ]
+      },
+      {
         test: /\.html$/i,
         exclude: /node_modules/,
         use: ["html-loader"]
@@ -49,10 +58,10 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(appDir, 'src/index.html'),
+      template: path.resolve(appDir, pk.html),
+      inject: true,
       title: pk.name,
       favicon: pk.favicon,
     })
-  ],
-  appdir: appDir
+  ]
 }
