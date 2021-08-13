@@ -10,6 +10,13 @@ node_modules
 /dist/*
 !/dist/index.html
 
+# .js | .js.map | .d.ts files (for Typescript Project)
+# ********************** UNCOMMENT BELOW IF TYPESCRIPT PROJECT
+src/**/*.js*
+game/**/*.js*
+game/**/*.d.ts
+# **********************
+
 # Include only favicon.ico in assets/favicon/
 # ***********************************************************
 # logic for only including a specific file/folder within a deeply nested subdirectory:
