@@ -53,7 +53,6 @@ export default class App {
 
     // Show/Hide Inspector on keyboard shortcut (Ctrl+Shift+alt(option)+i)
     window.addEventListener('keydown', (e) => {
-      console.log(e.key);
       if (
         e.ctrlKey &&
         e.shiftKey &&
