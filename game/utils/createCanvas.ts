@@ -1,8 +1,8 @@
 const createCanvas = (canvasId: string): HTMLCanvasElement => {
-  // Create canvas element and append to the DOM body
-  const canvas = document.createElement('canvas');
+  const canvas = document.createElement('canvas'); // Create canvas element and append to the DOM body
   canvas.style.width = '100%';
   canvas.style.height = '100%';
+  canvas.style.backgroundColor = '#1c5697';
   canvas.id = canvasId;
   document.body.appendChild(canvas);
 
