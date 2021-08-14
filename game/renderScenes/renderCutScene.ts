@@ -23,8 +23,8 @@ const renderCutScene = async (canvas: HTMLCanvasElement, engine: Engine, current
   currentScene.detachControl(); // Detach all event handlers from the current scene
 
   // --- SCENE SETUP ---
-  const cutScene = new Scene(engine);
-  cutScene.clearColor = new Color4(0, 0, 0, 1); // Define the color used to clear the render buffer
+  const thisScene = new Scene(engine);
+  thisScene.clearColor = new Color4(0, 0, 0, 1); // Define the color used to clear the render buffer
 
   // Initialize Camera
   const camera: ArcRotateCamera = new ArcRotateCamera(
@@ -33,7 +33,7 @@ const renderCutScene = async (canvas: HTMLCanvasElement, engine: Engine, current
     Math.PI / 2.5,
     3,
     Vector3.Zero(),
-    cutScene
+    thisScene
   );
   camera.attachControl(canvas, true);
 
@@ -41,7 +41,7 @@ const renderCutScene = async (canvas: HTMLCanvasElement, engine: Engine, current
   const light: HemisphericLight = new HemisphericLight(
     'light1',
     new Vector3(0.8, 1, 0),
-    cutScene
+    thisScene
   );
 
   // Create Mesh
@@ -50,7 +50,7 @@ const renderCutScene = async (canvas: HTMLCanvasElement, engine: Engine, current
     {
       diameter: 0.6
     },
-    cutScene
+    thisScene
   );
 
   // --- GUI ---
@@ -71,16 +71,16 @@ const renderCutScene = async (canvas: HTMLCanvasElement, engine: Engine, current
 
   button.onPointerClickObservable.add(() => {
     renderNextScene();
-    cutScene.detachControl(); // Disable observables
+    thisScene.detachControl(); // Disable observables
   });
 
   // --- START SCENE IS LOADED ---
-  await cutScene.whenReadyAsync(); // 'whenReadyAsync' returns a promise that resolves when scene is ready
+  await thisScene.whenReadyAsync(); // 'whenReadyAsync' returns a promise that resolves when scene is ready
   engine.hideLoadingUI(); // hide the loading UI after scene has loaded
   currentScene.dispose(); // Release all resources held by the existing scene
 
   return {
-    scene: cutScene,
+    scene: thisScene,
     state: GameState.CUT
   }
 }

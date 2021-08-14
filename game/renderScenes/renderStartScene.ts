@@ -23,8 +23,8 @@ const renderStartScene = async (canvas: HTMLCanvasElement, engine: Engine, curre
   currentScene.detachControl(); // Detach all event handlers from the current scene
 
   // --- SCENE SETUP ---
-  const startScene = new Scene(engine);
-  startScene.clearColor = new Color4(0, 0, 0, 1); // Define the color used to clear the render buffer
+  const thisScene = new Scene(engine);
+  thisScene.clearColor = new Color4(0, 0, 0, 1); // Define the color used to clear the render buffer
 
   // Initialize Camera
   const camera: ArcRotateCamera = new ArcRotateCamera(
@@ -33,7 +33,7 @@ const renderStartScene = async (canvas: HTMLCanvasElement, engine: Engine, curre
     Math.PI / 2.5,
     3,
     Vector3.Zero(),
-    startScene
+    thisScene
   );
   camera.attachControl(canvas, true);
 
@@ -41,21 +41,20 @@ const renderStartScene = async (canvas: HTMLCanvasElement, engine: Engine, curre
   const light: HemisphericLight = new HemisphericLight(
     'light1',
     new Vector3(0.8, 1, 0),
-    startScene
+    thisScene
   );
 
   // Create Mesh
   const box: Mesh = MeshBuilder.CreateBox(
     'box',
     {},
-    startScene
+    thisScene
   );
 
   // --- GUI ---
   const guiMenu = AdvancedDynamicTexture.CreateFullscreenUI('UI');
   guiMenu.idealWidth = window.innerWidth;
   guiMenu.idealHeight = window.innerHeight;
-  console.log('GUI Menu Ideal Height: ', guiMenu.idealHeight);
 
   // Create a simple button to go to the next scene
   const button = Button.CreateSimpleButton('start', 'PLAY GAME');
@@ -70,16 +69,16 @@ const renderStartScene = async (canvas: HTMLCanvasElement, engine: Engine, curre
 
   button.onPointerClickObservable.add(() => {
     renderNextScene();
-    startScene.detachControl(); // Disable observables
+    thisScene.detachControl(); // Disable observables
   })
 
   // --- START SCENE IS LOADED ---
-  await startScene.whenReadyAsync(); // 'whenReadyAsync' returns a promise that resolves when scene is ready
+  await thisScene.whenReadyAsync(); // 'whenReadyAsync' returns a promise that resolves when scene is ready
   engine.hideLoadingUI(); // hide the loading UI after scene has loaded
   currentScene.dispose(); // Release all resources held by the existing scene
 
   return {
-    scene: startScene,
+    scene: thisScene,
     state: GameState.START
   }
 }
