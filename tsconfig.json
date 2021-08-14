@@ -22,10 +22,7 @@
     "declaration": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "rootDir": "game",
-    "types": [
-      "babylonjs"
-    ]
+    "rootDir": "game"
   }
 }
 // tsconfig.json from RaananW/babylonjs-webpack-es6 (for reference)
