@@ -10,48 +10,57 @@ import {
   Mesh,
   MeshBuilder
 } from '@babylonjs/core';
+import createCanvas from './utils/createCanvas';
+
+enum State {
+  START = 0,
+  GAME = 1,
+  GAMEOVER = 2,
+  CUTSCENE = 3
+}
 
 export default class App {
-  constructor() {
-    // Create canvas element and append to the DOM body
-    const canvas = document.createElement('canvas');
-    canvas.style.width = '100%';
-    canvas.style.height = '100%';
-    canvas.id = 'game';
-    document.body.appendChild(canvas);
+  private _scene: Scene;
+  private _canvas: HTMLCanvasElement;
+  private _engine: Engine;
+  private _currentState = 0;
 
-    // Initialize Babylonjs Engine & Scene
-    const engine = new Engine(canvas, true);
-    const scene = new Scene(engine);
+  constructor(canvasId: string) {
+    // CANVAS ELEMENT
+    this._canvas = createCanvas(canvasId);
 
-    // Initialize Camera
+    // ENGINE & SCENE
+    this._engine = new Engine(this._canvas, true);
+    this._scene = new Scene(this._engine);
+
+    // CAMERA
     const camera: ArcRotateCamera = new ArcRotateCamera(
       'camera',
       Math.PI / 2,
       Math.PI / 2,
       2,
       Vector3.Zero(),
-      scene
+      this._scene
     );
-    camera.attachControl(canvas, true);
+    camera.attachControl(this._canvas, true);
 
-    // Initialize Light
+    // LIGHT
     const light: HemisphericLight = new HemisphericLight(
-      'light',
+      'light1',
       new Vector3(0.8, 1, 0),
-      scene
+      this._scene
     );
 
-    // Create Mesh
+    // MESH
     const sphere: Mesh = MeshBuilder.CreateSphere(
       'sphere',
       {
         diameter: 1
       },
-      scene
+      this._scene
     );
 
-    // Show/Hide Inspector on keyboard shortcut (Ctrl+Shift+alt(option)+i)
+    // INSPECTOR: Show/hide inspector on keyboard shortcut (Ctrl+Shift+alt(option)+i)
     window.addEventListener('keydown', (e) => {
       if (
         e.ctrlKey &&
@@ -59,20 +68,20 @@ export default class App {
         e.altKey &&
         e.key === 'ˆ' // 'i' turns to 'ˆ' with altKey(option on mac)
       ) {
-        scene.debugLayer.isVisible()
-          ? scene.debugLayer.hide()
-          : scene.debugLayer.show();
+        this._scene.debugLayer.isVisible()
+          ? this._scene.debugLayer.hide()
+          : this._scene.debugLayer.show();
       }
     });
 
-    // Run the Engine Render Loop
-    engine.runRenderLoop(() => {
-      scene.render();
+    // RENDER LOOP
+    this._engine.runRenderLoop(() => {
+      this._scene.render();
     });
 
-    // Resize window
+    // Window Resize EvenetListener
     window.addEventListener('resize', () => {
-      engine.resize();
+      this._engine.resize();
     });
   }
 }
