@@ -9,7 +9,8 @@ import { createCanvas } from './utils';
 import { GameState } from './store';
 import {
   renderStartScene,
-  renderCutScene
+  renderCutScene,
+  renderGameOverScene
 } from './renderScenes';
 
 
@@ -44,6 +45,7 @@ export default class App {
       });
     }
 
+    // Run the main game function.
     this._main();
   }
 
@@ -74,6 +76,11 @@ export default class App {
     });
   }
 
+  // SETUP GAME LOGIC
+  private _setUpGame = async (): Promise<void> => {
+
+  }
+
   // SCENE RENDER LOGIC
   // Start Scene
   private _renderStart = async (): Promise<void> => {
@@ -84,7 +91,14 @@ export default class App {
 
   // Cut Scene
   private _renderCut = async (): Promise<void> => {
-    const { scene, state } = await renderCutScene(this._canvas, this._engine, this._scene, this._renderStart);
+    const { scene, state } = await renderCutScene(this._canvas, this._engine, this._scene, this._renderGameOver);
+    this._scene = scene; // Set the current scene to cut scene
+    this._currentState = state; // Set the current state to the corresponding state from the GameState enum
+  }
+
+  // GameOver Scene
+  private _renderGameOver = async (): Promise<void> => {
+    const { scene, state } = await renderGameOverScene(this._canvas, this._engine, this._scene, this._renderStart);
     this._scene = scene; // Set the current scene to cut scene
     this._currentState = state; // Set the current state to the corresponding state from the GameState enum
   }
