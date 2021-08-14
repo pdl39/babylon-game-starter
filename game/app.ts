@@ -9,8 +9,9 @@ import { createCanvas } from './utils';
 import { GameState } from './store';
 import {
   renderStartScene,
-  renderCutScene,
-  renderGameOverScene
+  renderStoryScene,
+  renderGameScene,
+  renderGameOverScene,
 } from './renderScenes';
 
 
@@ -19,6 +20,7 @@ export default class App {
   private _canvas: HTMLCanvasElement;
   private _engine: Engine;
   private _currentState: number = GameState.START;
+  private _gameScene: Scene;
 
   constructor(canvasId: string) {
     // CANVAS
@@ -57,14 +59,6 @@ export default class App {
     // Render Engine Loop
     this._engine.runRenderLoop(() => {
       switch (this._currentState) {
-        case GameState.START:
-          // console.log('START: ', this._currentState);
-          this._scene.render();
-          break;
-        case GameState.CUT:
-          // console.log('PAUSE: ', this._currentState);
-          this._scene.render();
-          break;
         default:
           this._scene.render();
       }
@@ -76,22 +70,31 @@ export default class App {
     });
   }
 
-  // SETUP GAME LOGIC
+  // SETUP GAME LOGIC -> Pre-create game scene and start loading all game assets
   private _setUpGame = async (): Promise<void> => {
+    this._gameScene = new Scene(this._engine);
 
+    //...Load Game Assets
   }
 
   // SCENE RENDER LOGIC
   // Start Scene
   private _renderStart = async (): Promise<void> => {
-    const { scene, state } = await renderStartScene(this._canvas, this._engine, this._scene, this._renderCut);
+    const { scene, state } = await renderStartScene(this._canvas, this._engine, this._scene, this._renderStory);
     this._scene = scene; // Set the current scene to start scene
     this._currentState = state; // Set the current state to the corresponding state from the GameState enum
   }
 
-  // Cut Scene
-  private _renderCut = async (): Promise<void> => {
-    const { scene, state } = await renderCutScene(this._canvas, this._engine, this._scene, this._renderGameOver);
+  // Story Scene
+  private _renderStory = async (): Promise<void> => {
+    const { scene, state } = await renderStoryScene(this._canvas, this._engine, this._scene, this._renderGame, this._setUpGame);
+    this._scene = scene; // Set the current scene to cut scene
+    this._currentState = state; // Set the current state to the corresponding state from the GameState enum
+  }
+
+  // Game Scene
+  private _renderGame = async (): Promise<void> => {
+    const { scene, state } = await renderGameScene(this._canvas, this._engine, this._scene, this._renderGameOver);
     this._scene = scene; // Set the current scene to cut scene
     this._currentState = state; // Set the current state to the corresponding state from the GameState enum
   }

@@ -16,8 +16,8 @@ import {
 import { GameState } from '../store';
 
 
-const renderCutScene = async (canvas: HTMLCanvasElement, engine: Engine, currentScene: Scene, renderNextScene: () => Promise<void>): Promise<any> => {
-  console.log('Cut Scene rendering...');
+const renderGameScene = async (canvas: HTMLCanvasElement, engine: Engine, currentScene: Scene, renderNextScene: () => Promise<void>): Promise<any> => {
+  console.log('GameOver Scene rendering...');
 
   engine.displayLoadingUI(); // Display loading UI while the start scene loads
   currentScene.detachControl(); // Detach all event handlers from the current scene
@@ -26,29 +26,31 @@ const renderCutScene = async (canvas: HTMLCanvasElement, engine: Engine, current
   const thisScene = new Scene(engine);
   thisScene.clearColor = new Color4(0, 0, 0, 1); // Define the color used to clear the render buffer
 
-  // Initialize Camera
+  // Camera
   const camera: ArcRotateCamera = new ArcRotateCamera(
     'camera',
     Math.PI / 3,
-    Math.PI / 2.5,
+    Math.PI / 3,
     3,
     Vector3.Zero(),
     thisScene
   );
   camera.attachControl(canvas, true);
 
-  // Initialize Light
+  // Light
   const light: HemisphericLight = new HemisphericLight(
     'light1',
     new Vector3(0.8, 1, 0),
     thisScene
   );
 
-  // Create Mesh
-  const sphere: Mesh = MeshBuilder.CreateSphere(
-    'sphere',
+  // Mesh
+  const torus: Mesh = MeshBuilder.CreateTorus(
+    'torus',
     {
-      diameter: 0.6
+      diameter: 0.8,
+      thickness: 0.4,
+      tessellation: 64
     },
     thisScene
   );
@@ -59,7 +61,7 @@ const renderCutScene = async (canvas: HTMLCanvasElement, engine: Engine, current
   guiMenu.idealHeight = window.innerHeight;
 
   // Create a simple button to go to the next scene
-  const button = Button.CreateSimpleButton('start', 'RESUME GAME');
+  const button = Button.CreateSimpleButton('mainMenu', 'MAIN MENU');
   button.width = 0.4;
   button.height = 0.07;
   button.color = '#ffffff';
@@ -71,7 +73,6 @@ const renderCutScene = async (canvas: HTMLCanvasElement, engine: Engine, current
 
   button.onPointerClickObservable.add(() => {
     renderNextScene();
-    thisScene.detachControl(); // Disable observables
   });
 
   // --- START SCENE IS LOADED ---
@@ -81,8 +82,8 @@ const renderCutScene = async (canvas: HTMLCanvasElement, engine: Engine, current
 
   return {
     scene: thisScene,
-    state: GameState.CUT
+    state: GameState.GAME
   }
 }
 
-export default renderCutScene;
+export default renderGameScene;

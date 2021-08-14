@@ -1,9 +1,11 @@
 import renderStartScene from './renderStartScene';
-import renderCutScene from './renderCutScene';
+import renderStoryScene from './renderStoryScene';
+import renderGameScene from './renderGameScene';
 import renderGameOverScene from './renderGameOverScene';
 
 export {
   renderStartScene,
-  renderCutScene,
+  renderStoryScene,
+  renderGameScene,
   renderGameOverScene,
 }

@@ -26,7 +26,7 @@ const renderGameOverScene = async (canvas: HTMLCanvasElement, engine: Engine, cu
   const thisScene = new Scene(engine);
   thisScene.clearColor = new Color4(0, 0, 0, 1); // Define the color used to clear the render buffer
 
-  // Initialize Camera
+  // Camera
   const camera: ArcRotateCamera = new ArcRotateCamera(
     'camera',
     Math.PI / 3,
@@ -37,14 +37,14 @@ const renderGameOverScene = async (canvas: HTMLCanvasElement, engine: Engine, cu
   );
   camera.attachControl(canvas, true);
 
-  // Initialize Light
+  // Light
   const light: HemisphericLight = new HemisphericLight(
     'light1',
     new Vector3(0.8, 1, 0),
     thisScene
   );
 
-  // Create Mesh
+  // Mesh
   const torus: Mesh = MeshBuilder.CreateTorus(
     'torus',
     {
@@ -76,7 +76,7 @@ const renderGameOverScene = async (canvas: HTMLCanvasElement, engine: Engine, cu
     thisScene.detachControl(); // Disable observables
   });
 
-  // --- START SCENE IS LOADED ---
+  // --- SCENE IS LOADED ---
   await thisScene.whenReadyAsync(); // 'whenReadyAsync' returns a promise that resolves when scene is ready
   engine.hideLoadingUI(); // hide the loading UI after scene has loaded
   currentScene.dispose(); // Release all resources held by the existing scene

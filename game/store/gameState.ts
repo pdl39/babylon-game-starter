@@ -1,8 +1,8 @@
 enum GameState {
   START = 0,
-  GAME = 1,
-  GAMEOVER = 2,
-  CUT = 3
+  STORY = 1,
+  GAME = 2,
+  GAMEOVER = 3,
 }
 
 export default GameState;

@@ -16,8 +16,8 @@ import {
 import { GameState } from '../store';
 
 
-const renderStartScene = async (canvas: HTMLCanvasElement, engine: Engine, currentScene: Scene, renderNextScene: () => Promise<void>): Promise<any> => {
-  console.log('Start Scene rendering...');
+const renderStoryScene = async (canvas: HTMLCanvasElement, engine: Engine, currentScene: Scene, renderNextScene: () => Promise<void>, setUpGame: () => Promise<void>): Promise<any> => {
+  console.log('Cut Scene rendering...');
 
   engine.displayLoadingUI(); // Display loading UI while the start scene loads
   currentScene.detachControl(); // Detach all event handlers from the current scene
@@ -45,9 +45,11 @@ const renderStartScene = async (canvas: HTMLCanvasElement, engine: Engine, curre
   );
 
   // Mesh
-  const box: Mesh = MeshBuilder.CreateBox(
-    'box',
-    {},
+  const sphere: Mesh = MeshBuilder.CreateSphere(
+    'sphere',
+    {
+      diameter: 0.6
+    },
     thisScene
   );
 
@@ -57,30 +59,36 @@ const renderStartScene = async (canvas: HTMLCanvasElement, engine: Engine, curre
   guiMenu.idealHeight = window.innerHeight;
 
   // Create a simple button to go to the next scene
-  const button = Button.CreateSimpleButton('start', 'PLAY GAME');
-  button.width = 0.4;
+  const button = Button.CreateSimpleButton('next', 'NEXT');
+  button.width = 0.25;
   button.height = 0.07;
-  button.color = '#ffffff';
-  button.top = '-10px';
+  button.color = '#4af2a1';
+  button.top = '3%';
+  button.left = '-3%';
   button.thickness = 0.5;
+  button.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+  button.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
   button.hoverCursor = 'pointer';
-  button.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
   guiMenu.addControl(button);
 
   button.onPointerClickObservable.add(() => {
     renderNextScene();
-    thisScene.detachControl(); // Disable observables
-  })
+  });
 
   // --- SCENE IS LOADED ---
   await thisScene.whenReadyAsync(); // 'whenReadyAsync' returns a promise that resolves when scene is ready
   engine.hideLoadingUI(); // hide the loading UI after scene has loaded
   currentScene.dispose(); // Release all resources held by the existing scene
 
+  let isGameSetupComplete = false;
+  await setUpGame().then(() => {
+    isGameSetupComplete = true;
+  });
+
   return {
     scene: thisScene,
-    state: GameState.START
+    state: GameState.STORY
   }
 }
 
-export default renderStartScene;
+export default renderStoryScene;
