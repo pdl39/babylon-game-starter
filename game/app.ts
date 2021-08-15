@@ -4,76 +4,106 @@ import '@babylonjs/loaders/glTF';
 import {
   Engine,
   Scene,
-  Vector3,
-  ArcRotateCamera,
-  HemisphericLight,
-  Mesh,
-  MeshBuilder
 } from '@babylonjs/core';
+import { createCanvas } from './utils';
+import { GameState } from './store';
+import {
+  renderStartScene,
+  renderStoryScene,
+  renderGameScene,
+  renderGameOverScene,
+} from './renderScenes';
+
 
 export default class App {
-  constructor() {
-    // Create canvas element and append to the DOM body
-    const canvas = document.createElement('canvas');
-    canvas.style.width = '100%';
-    canvas.style.height = '100%';
-    canvas.id = 'game';
-    document.body.appendChild(canvas);
+  private _scene: Scene;
+  private _canvas: HTMLCanvasElement;
+  private _engine: Engine;
+  private _currentState: number = GameState.START;
+  private _gameScene: Scene;
 
-    // Initialize Babylonjs Engine & Scene
-    const engine = new Engine(canvas, true);
-    const scene = new Scene(engine);
+  constructor(canvasId: string) {
+    // CANVAS
+    this._canvas = createCanvas(canvasId);
 
-    // Initialize Camera
-    const camera: ArcRotateCamera = new ArcRotateCamera(
-      'camera',
-      Math.PI / 2,
-      Math.PI / 2,
-      2,
-      Vector3.Zero(),
-      scene
-    );
-    camera.attachControl(canvas, true);
+    // ENGINE & SCENE
+    this._engine = new Engine(this._canvas, true, { stencil: true });
+    this._scene = new Scene(this._engine);
 
-    // Initialize Light
-    const light: HemisphericLight = new HemisphericLight(
-      'light',
-      new Vector3(0.8, 1, 0),
-      scene
-    );
+    // --- For Development Only ---
+    if (process.env.NODE_ENV === 'development') {
+      // INSPECTOR: Show/hide inspector on keyboard shortcut (Ctrl+Shift+alt(option)+i)
+      window.addEventListener('keydown', (e) => {
+        if (
+          e.ctrlKey &&
+          e.shiftKey &&
+          e.altKey &&
+          e.key === 'ˆ' // 'i' turns to 'ˆ' with altKey(option on mac)
+        ) {
+          this._scene.debugLayer.isVisible()
+            ? this._scene.debugLayer.hide()
+            : this._scene.debugLayer.show();
+        }
+      });
+    }
 
-    // Create Mesh
-    const sphere: Mesh = MeshBuilder.CreateSphere(
-      'sphere',
-      {
-        diameter: 1
-      },
-      scene
-    );
+    // Run the main game function.
+    this._main();
+  }
 
-    // Show/Hide Inspector on keyboard shortcut (Ctrl+Shift+alt(option)+i)
-    window.addEventListener('keydown', (e) => {
-      console.log(e.key);
-      if (
-        e.ctrlKey &&
-        e.shiftKey &&
-        e.altKey &&
-        e.key === 'ˆ' // 'i' turns to 'ˆ' with altKey(option on mac)
-      ) {
-        scene.debugLayer.isVisible()
-          ? scene.debugLayer.hide()
-          : scene.debugLayer.show();
+  // ***** METHODS *****
+  // GAME MAIN
+  private async _main(): Promise<void> {
+    await this._renderStart();
+
+    // Register the render loop to continuously render the scenes
+    this._engine.runRenderLoop(() => {
+      switch (this._currentState) {
+        default:
+          this._scene.render();
       }
     });
 
-    // Run the Engine Render Loop
-    engine.runRenderLoop(() => {
-      scene.render();
-    });
-
-    // Resize window
+    // Window Resize EvenetListener
     window.addEventListener('resize', () => {
-      engine.resize();
+      this._engine.resize();
     });
+  }
+
+  // SETUP GAME LOGIC -> Pre-create game scene and start loading all game assets
+  private _setUpGame = async (): Promise<void> => {
+    this._gameScene = new Scene(this._engine);
+
+    //...Load Game Assets
+  }
+
+  // SCENE RENDER LOGIC
+  // Start Scene
+  private _renderStart = async (): Promise<void> => {
+    const { scene, state } = await renderStartScene(this._canvas, this._engine, this._scene, this._renderStory);
+    this._scene = scene; // Set the current scene to start scene
+    this._currentState = state; // Set the current state to the corresponding state from the GameState enum
+  }
+
+  // Story Scene
+  private _renderStory = async (): Promise<void> => {
+    const { scene, state } = await renderStoryScene(this._canvas, this._engine, this._scene, this._renderGame, this._setUpGame);
+    this._scene = scene; // Set the current scene to cut scene
+    this._currentState = state; // Set the current state to the corresponding state from the GameState enum
+  }
+
+  // Game Scene
+  private _renderGame = async (): Promise<void> => {
+    const { scene, state } = await renderGameScene(this._canvas, this._engine, this._scene, this._gameScene, this._renderGameOver);
+    this._scene = scene; // Set the current scene to cut scene
+    this._currentState = state; // Set the current state to the corresponding state from the GameState enum
+    this._scene.attachControl();
+  }
+
+  // GameOver Scene
+  private _renderGameOver = async (): Promise<void> => {
+    const { scene, state } = await renderGameOverScene(this._canvas, this._engine, this._scene, this._renderStart);
+    this._scene = scene; // Set the current scene to cut scene
+    this._currentState = state; // Set the current state to the corresponding state from the GameState enum
   }
 }
