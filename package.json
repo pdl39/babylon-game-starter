@@ -9,14 +9,14 @@
   "assets": "assets",
   "favicon": "assets/favicon/favicon.ico",
   "scripts": {
-    "start": "npm run build & npm run server",
     "build": "NODE_ENV=production webpack --config webpack.prod.js",
     "server": "node server/server.js",
+    "start": "npm run server:webpack & npm run server:dev",
     "start:dev": "npm run build:dev & npm run server:dev",
     "build:dev": "webpack --watch --config webpack.dev.js",
+    "server:webpack": "webpack serve --config webpack.dev.js",
     "server:dev": "nodemon server/server.js",
-    "start:dev2": "NODE_ENV=development nodemon server/server.js",
-    "start:dev3": "webpack serve --config webpack.dev.js"
+    "server:dev2": "NODE_ENV=development nodemon server/server.js"
   },
   "author": "pdl39",
   "license": "ISC",
