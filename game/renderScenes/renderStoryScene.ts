@@ -6,7 +6,9 @@ import {
   HemisphericLight,
   Mesh,
   MeshBuilder,
+  Color3,
   Color4,
+  HighlightLayer
 } from "@babylonjs/core";
 import {
   AdvancedDynamicTexture,
@@ -53,6 +55,11 @@ const renderStoryScene = async (canvas: HTMLCanvasElement, engine: Engine, curre
     thisScene
   );
 
+  // Mesh Highlight
+  const hlSphere = new HighlightLayer('hlSphere', thisScene);
+  hlSphere.addMesh(sphere, new Color3(0.29, 0.95, 0.63));
+  // hlSphere.removeMesh(sphere);
+
   // --- GUI ---
   const guiMenu = AdvancedDynamicTexture.CreateFullscreenUI('UI');
   guiMenu.idealWidth = window.innerWidth;
@@ -62,17 +69,18 @@ const renderStoryScene = async (canvas: HTMLCanvasElement, engine: Engine, curre
   const button = Button.CreateSimpleButton('next', 'NEXT');
   button.width = 0.25;
   button.height = 0.07;
-  button.color = '#4af2a1';
-  button.top = '3%';
+  button.color = '#4AF2A1';
+  button.top = '-5%';
   button.left = '-3%';
   button.thickness = 0.5;
-  button.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+  button.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
   button.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
   button.hoverCursor = 'pointer';
   guiMenu.addControl(button);
 
   button.onPointerClickObservable.add(() => {
     renderNextScene();
+    thisScene.detachControl() // Disable observables
   });
 
   // --- SCENE IS LOADED ---

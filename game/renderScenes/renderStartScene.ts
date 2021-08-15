@@ -6,7 +6,9 @@ import {
   HemisphericLight,
   Mesh,
   MeshBuilder,
+  Color3,
   Color4,
+  HighlightLayer
 } from "@babylonjs/core";
 import {
   AdvancedDynamicTexture,
@@ -29,9 +31,9 @@ const renderStartScene = async (canvas: HTMLCanvasElement, engine: Engine, curre
   // Camera
   const camera: ArcRotateCamera = new ArcRotateCamera(
     'camera',
-    Math.PI / 3,
-    Math.PI / 2.5,
-    3,
+    Math.PI / 6,
+    Math.PI / 2,
+    6,
     Vector3.Zero(),
     thisScene
   );
@@ -40,16 +42,23 @@ const renderStartScene = async (canvas: HTMLCanvasElement, engine: Engine, curre
   // Light
   const light: HemisphericLight = new HemisphericLight(
     'light1',
-    new Vector3(0.8, 1, 0),
+    new Vector3(0.3, 0.2, -0.2),
+    thisScene
+  );
+  light.intensity = 1.0;
+
+  // Mesh
+  const building: Mesh = MeshBuilder.CreateBox(
+    'building',
+    {
+      height: 2.5
+    },
     thisScene
   );
 
-  // Mesh
-  const box: Mesh = MeshBuilder.CreateBox(
-    'box',
-    {},
-    thisScene
-  );
+  // Mesh Highlight
+  const hlBuilding = new HighlightLayer('hlBuilding', thisScene);
+  hlBuilding.addMesh(building, new Color3(0.29, 0.95, 0.63));
 
   // --- GUI ---
   const guiMenu = AdvancedDynamicTexture.CreateFullscreenUI('UI');

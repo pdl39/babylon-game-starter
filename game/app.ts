@@ -27,7 +27,7 @@ export default class App {
     this._canvas = createCanvas(canvasId);
 
     // ENGINE & SCENE
-    this._engine = new Engine(this._canvas, true);
+    this._engine = new Engine(this._canvas, true, { stencil: true });
     this._scene = new Scene(this._engine);
 
     // --- For Development Only ---
@@ -56,7 +56,7 @@ export default class App {
   private async _main(): Promise<void> {
     await this._renderStart();
 
-    // Render Engine Loop
+    // Register the render loop to continuously render the scenes
     this._engine.runRenderLoop(() => {
       switch (this._currentState) {
         default:
@@ -94,9 +94,10 @@ export default class App {
 
   // Game Scene
   private _renderGame = async (): Promise<void> => {
-    const { scene, state } = await renderGameScene(this._canvas, this._engine, this._scene, this._renderGameOver);
+    const { scene, state } = await renderGameScene(this._canvas, this._engine, this._scene, this._gameScene, this._renderGameOver);
     this._scene = scene; // Set the current scene to cut scene
     this._currentState = state; // Set the current state to the corresponding state from the GameState enum
+    this._scene.attachControl();
   }
 
   // GameOver Scene
