@@ -1,8 +1,31 @@
 {
   "name": "babylonjs-game-starter",
   "version": "1.0.0",
-  "description": "Starter game project in Babylon.js",
+  "description": "Babylonjs game project starter build with webpack",
+  "author": "pdl39",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pdl39/babylonjs-game-starter.git"
+  },
   "main": "game/index.ts",
+  "keywords": [
+    "babylonjs",
+    "3D",
+    "webpack",
+    "webgl",
+    "webgpu",
+    "game",
+    "nodejs",
+    "expressjs",
+    "typescript",
+    "javascript",
+    "boilerplate",
+    "starter"
+  ],
+  "bin": {
+    "babylonjs-game-starter": "bin/bgs.js"
+  },
   "html": "src/index.html",
   "fallback": "src/fallback.html",
   "src": "src",
@@ -18,8 +41,6 @@
     "server:dev": "nodemon server/server.js",
     "server:dev2": "NODE_ENV=development nodemon server/server.js"
   },
-  "author": "pdl39",
-  "license": "ISC",
   "dependencies": {
     "@babel/runtime": "^7.15.3",
     "express": "^4.17.1",
@@ -56,5 +77,9 @@
     "webpack-dev-middleware": "^5.0.0",
     "webpack-dev-server": "^3.11.2",
     "webpack-merge": "^5.8.0"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/pdl39/babylonjs-game-starter/issues"
+  },
+  "homepage": "https://github.com/pdl39/babylonjs-game-starter#readme"
 }
