@@ -23,8 +23,8 @@ const extToSkipConditional = ['.js', '.js.map', '.d.ts'];
 const extSkipExceptionDirs = ['src', 'server']; // Directories in this list are exceptions for skipping certain extensions
 
 
-logMessage(`argv: ${argv}`, 'blue');
-logMessage(`argv length: ${argv.length}`, 'blue');
+logMessage(`argv: ${process.argv}`, 'yellow');
+logMessage(`argv length: ${process.argv.length}`, 'yellow');
 
 // If no argument is entered for project name, display a use case example.
 if (process.argv.length < 3) {
@@ -42,7 +42,7 @@ const appName = process.argv[2];
 const appPath = path.resolve(cwd, appName);
 
 // FOR LOCAL TESTING:
-// const cwd = '/Users/pdl39/projects/npxBuildTest/newDir2';
+// const cwd = '/Users/pdl39/projects/npxBuildTest';
 // const appName = 'new-app';
 // const appPath = path.resolve(cwd, appName);
 
