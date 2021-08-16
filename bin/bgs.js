@@ -4,12 +4,10 @@
 
 const fs = require('fs');
 const fsPromises = require('fs/promises');
-const { Buffer } = require('buffer');
 const path = require('path');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const TERM_COLORS = require('../bin/termColors');
-const { dependencies } = require('webpack');
 
 // This is the root directory and package.json of this original repo.
 const repoRoot = path.resolve(__dirname, '../'); // make sure to change the second argument as needed.
@@ -24,6 +22,9 @@ const extToSkipAlways = ['.ds_store'];
 const extToSkipConditional = ['.js', '.js.map', '.d.ts'];
 const extSkipExceptionDirs = ['src', 'server']; // Directories in this list are exceptions for skipping certain extensions
 
+
+logMessage(`argv: ${argv}`, 'blue');
+logMessage(`argv length: ${argv.length}`, 'blue');
 
 // If no argument is entered for project name, display a use case example.
 if (process.argv.length < 3) {
