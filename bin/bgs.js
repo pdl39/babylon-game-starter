@@ -17,9 +17,9 @@ const packagejson = require(path.resolve(repoRoot, 'package.json'));
 const repo = packagejson.repository.url;
 
 
-// Files to skip when calling copyFiles function.
+// Files to skip when calling copyFiles function (all in lower case).
 const dirsToSkip = ['.git', '.cache', 'node_modules', 'dist', 'bin', 'newdirectory'];
-const filesToSkip = ['package.json', 'package-lock.json', '.gitignore']; // need separate logic to add these later.
+const filesToSkip = ['license.md', 'readme.md', 'package.json', 'package-lock.json', '.gitignore'];
 const extToSkipAlways = ['.ds_store'];
 const extToSkipConditional = ['.js', '.js.map', '.d.ts'];
 const extSkipExceptionDirs = ['src', 'server']; // Directories in this list are exceptions for skipping certain extensions
@@ -105,7 +105,7 @@ async function setupProject() {
       throw err;
     }
 
-    logMessage(`Installation Success!\nPlease refer README.md on how to get started.\n`, 'green');
+    logMessage(`Installation Success!\nPlease refer to README.md at ${repo} for information on how to get started.\n`, 'green');
     logMessage(`Happy Coding :)`, 'brightGreen');
   }
   catch (err) {
