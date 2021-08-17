@@ -188,7 +188,6 @@ function copyFile (fileName, srcDir, destDir) {
   }
   catch (err) {
     logError(err, 'red');
-    throw err;
   }
 };
 
