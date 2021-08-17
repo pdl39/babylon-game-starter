@@ -18,7 +18,7 @@ const currentYear = new Date().getFullYear();
 
 // Files to skip when calling copyFiles function (all in lower case).
 const dirsToSkip = ['.git', '.cache', 'node_modules', 'dist', 'bin', 'newdirectory'];
-const filesToSkip = ['license.md', 'readme.md', 'package.json', 'package-lock.json', '.gitignore'];
+const filesToSkip = ['changelog.md', 'license.md', 'readme.md', 'package.json', 'package-lock.json', '.gitignore'];
 const extToSkipAlways = ['.ds_store'];
 const extToSkipConditional = ['.js', '.js.map', '.d.ts'];
 const extSkipExceptionDirs = ['src', 'server']; // Directories in this list are exceptions for skipping certain extensions
