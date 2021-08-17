@@ -4,6 +4,10 @@ All notable changes to **`babylonjs-game-starter`** will be documented here.
 <br/>
 
 # [Unreleased] ~2021-08-17
+
+<br/>
+
+# [1.0.2] 2021-08-17
 ### Added
 - CHANGELOG.md
 ### Changed
@@ -18,6 +22,8 @@ All notable changes to **`babylonjs-game-starter`** will be documented here.
   - Added engines:
     - `node: ~v14.17.5`
     - `npm: ~6.14.14`
+- tsconfig.json
+  - Removed commented out reference
 - bin/bgs.js
   - Added .on 'open' and 'error' checker for fs.createReadStream in `copyFile`
   - Updated package.json generation to include engines
