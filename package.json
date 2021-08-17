@@ -78,6 +78,10 @@
     "webpack-dev-server": "^3.11.2",
     "webpack-merge": "^5.8.0"
   },
+  "engines": {
+    "node": "~14.17.5",
+    "npm": "~6.14.14"
+  },
   "bugs": {
     "url": "https://github.com/pdl39/babylonjs-game-starter/issues"
   },
