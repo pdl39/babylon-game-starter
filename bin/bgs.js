@@ -252,6 +252,7 @@ function generateNewPackageJson() {
   const scripts = JSON.stringify(packagejson.scripts).split(',').join(',\n    ').slice(1, -1);
   const deps = JSON.stringify(packagejson.dependencies).split(',').join(',\n    ').slice(1, -1);
   const devDeps = JSON.stringify(packagejson.devDependencies).split(',').join(',\n    ').slice(1, -1);
+  const engines = JSON.stringify(packagejson.engines).split(',').join(',\n    ').slice(1, -1);
 
   return `{
   "name": "${appName}",
@@ -274,6 +275,9 @@ function generateNewPackageJson() {
   },
   "devDependencies": {
     ${devDeps}
+  },
+  "engines": {
+    ${engines}
   }
 }`;
 };
