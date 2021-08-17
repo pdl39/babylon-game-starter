@@ -13,6 +13,7 @@ const TERM_COLORS = require('../bin/termColors');
 const repoRoot = path.resolve(__dirname, '../'); // make sure to change the second argument as needed.
 const packagejson = require(path.resolve(repoRoot, 'package.json'));
 const repo = packagejson.repository.url;
+const currentYear = new Date().getFullYear();
 
 
 // Files to skip when calling copyFiles function (all in lower case).
@@ -23,14 +24,11 @@ const extToSkipConditional = ['.js', '.js.map', '.d.ts'];
 const extSkipExceptionDirs = ['src', 'server']; // Directories in this list are exceptions for skipping certain extensions
 
 
-logMessage(`argv: ${process.argv}`, 'yellow');
-logMessage(`argv length: ${process.argv.length}`, 'yellow');
-
 // If no argument is entered for project name, display a use case example.
 if (process.argv.length < 3) {
-  logError(`Please provide a name for your project`, 'red');
-  logError(`Use case example: `, 'red');
-  logError(`    npx ${packagejson.name} my-app`, 'red');
+  logError(`Please provide a name for your project.`, 'red');
+  logError(`Use case example: `, 'gray');
+  logError(`    npx ${packagejson.name} my-app`, 'gray');
   process.exit(1);
 }
 
@@ -46,6 +44,8 @@ const appPath = path.resolve(cwd, appName);
 // const appName = 'new-app';
 // const appPath = path.resolve(cwd, appName);
 
+const appNameColored = `${TERM_COLORS.blue}<${appName}>${TERM_COLORS.reset}`;
+
 setupProject();
 
 
@@ -54,7 +54,7 @@ setupProject();
 
 async function setupProject() {
   try {
-    logMessage(`Initializing project ${appName} at ${cwd}...`);
+    logMessage(`Initializing project ${appNameColored} at ${cwd}...`);
 
     // Create new project directory (appPath)
     try {
@@ -65,12 +65,13 @@ async function setupProject() {
     }
 
     // npm init
+    logMessage(`Running npm init...`);
     try {
       await runCommand(`cd ${appPath} && npm init -y`);
-      logMessage(`npm init success!`);
+      logMessage(`npm init success!\n`, 'cyan');
     }
     catch (err) {
-      logError(`npm init Failed.\n Please make sure you have npm installed`);
+      logError(`npm init Failed.\n Please make sure you have npm installed.\n`, 'red');
       throw err;
     }
 
@@ -79,7 +80,7 @@ async function setupProject() {
     logMessage(`Copying project files from ${repo}...`);
     try {
       await copyFiles(repoRoot, appPath);
-      logMessage(`Successully created initial project files.`, 'cyan');
+      logMessage(`Successully created initial project files.\n`, 'cyan');
     }
     catch (err) {
       logError(err, 'red');
@@ -87,26 +88,35 @@ async function setupProject() {
     }
 
     // Overwrite package.json created from npm init with new package.json
+    logMessage(`Rewriting package.json for ${appNameColored}...`);
     try {
       await overwritePackageJson();
-    }
-    catch (err) {
-      throw err;
-    }
-
-    // Run 'git init' and copy .gitignore into user's project.
-    logMessage(`Initializing git for <${appName}>...`);
-    try {
-      await runCommand(`cd ${appPath} && git init`);
-      await copyFile(`.gitignore`, repoRoot, appPath);
-      logMessage(`git init success!`);
+      logMessage(`package.json rewrite success!`, 'cyan');
     }
     catch (err) {
       logError(err, 'red');
       throw err;
     }
 
-    logMessage(`Installation Success!\nPlease refer to README.md at ${repo} for information on how to get started.\n`, 'green');
+    // Run 'git init' and copy .gitignore into user's project.
+    logMessage(`Initializing git for ${appNameColored}...`);
+    try {
+      await runCommand(`cd ${appPath} && git init`);
+      await copyFile(`.gitignore`, repoRoot, appPath);
+      logMessage(`git init success!\n`, 'cyan');
+    }
+    catch (err) {
+      logError(err, 'red');
+      throw err;
+    }
+
+    logMessage(`Installation Success.\n`, 'green');
+    logMessage(`Please refer to README.md at ${repo} on how to get started.\n`, 'green');
+    logMessage(`${packagejson.name} by ${packagejson.author}`, 'gray');
+    logMessage(`Published at npm (https://www.npmjs.com/package/babylonjs-game-starter)`, 'gray');
+    // logMessage(`(https://www.npmjs.com/package/babylonjs-game-starter)`, 'gray');
+    logMessage(`MIT Licence`, 'gray');
+    logMessage(`Copyright (c) ${new Date().getFullYear()} Peter Donghun Lee\n`, 'gray');
     logMessage(`Happy Coding :)`, 'brightGreen');
   }
   catch (err) {
@@ -150,11 +160,12 @@ async function runCommand (command) {
 function makeAppDir() {
   try {
     fs.mkdirSync(appPath);
-    logMessage(`Succeessfully created <${appName}> at ${cwd}`, 'cyan');
+    logMessage(`Succeessfully created ${appNameColored}`, 'cyan');
+    logMessage(`at ${cwd}\n`, 'cyan');
   }
   catch (err) {
     if (err.code === 'EEXIST') {
-      logError(`<${appName}> already exists.\nPlease choose a different name.`, 'magenta');
+      logError(`${appNameColored} already exists.\nPlease choose a different name.`, 'magenta');
     }
     else {
       logError(err, 'red');
@@ -168,10 +179,16 @@ function copyFile (fileName, srcDir, destDir) {
   try {
     const srcFile = fs.createReadStream(path.resolve(srcDir, fileName));
     const destFile = fs.createWriteStream(path.resolve(destDir, fileName));
-    srcFile.pipe(destFile);
+    srcFile.on('open', function() {
+      srcFile.pipe(destFile);
+    });
+    srcFile.on('error', function(err) {
+      throw err;
+    });
   }
   catch (err) {
     logError(err, 'red');
+    throw err;
   }
 };
 
@@ -252,6 +269,7 @@ function generateNewPackageJson() {
   const scripts = JSON.stringify(packagejson.scripts).split(',').join(',\n    ').slice(1, -1);
   const deps = JSON.stringify(packagejson.dependencies).split(',').join(',\n    ').slice(1, -1);
   const devDeps = JSON.stringify(packagejson.devDependencies).split(',').join(',\n    ').slice(1, -1);
+  const engines = JSON.stringify(packagejson.engines).split(',').join(',\n    ').slice(1, -1);
 
   return `{
   "name": "${appName}",
@@ -274,6 +292,9 @@ function generateNewPackageJson() {
   },
   "devDependencies": {
     ${devDeps}
+  },
+  "engines": {
+    ${engines}
   }
 }`;
 };
@@ -287,7 +308,7 @@ async function overwritePackageJson() {
       projectPackageJsonUrl,
       newPackageJson
     );
-    logMessage(`package.json successfully overwritten.\nWrote to ${projectPackageJsonUrl}:\n${newPackageJson}`, 'cyan');
+    logMessage(`Wrote to ${projectPackageJsonUrl}:\n${newPackageJson}`, 'cyan');
   }
   catch (err) {
     logError(err.stack, 'magenta');
