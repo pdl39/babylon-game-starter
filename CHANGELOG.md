@@ -19,6 +19,7 @@ All notable changes to **`babylonjs-game-starter`** will be documented here.
     - `node: ~v14.17.5`
     - `npm: ~6.14.14`
 - bin/bgs.js
+  - Added .on 'open' and 'error' checker for fs.createReadStream in `copyFile`
   - Updated package.json generation to include engines
   - Updated formatting of log messages
   - Removed logging for argv and argv length
