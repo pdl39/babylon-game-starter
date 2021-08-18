@@ -1,16 +1,68 @@
 # CHANGE LOG
+
 All notable changes to **`babylonjs-game-starter`** will be documented here.
 
 <br/>
 
-# [Unreleased] ~2021-08-17
+# [Unreleased] ~
+
+<br/>
+
+# [1.1.3] 2021-08-18
+
+### Changed
+
+- bin/bgs.js
+  - Removed 'by {packagejson.author}' in project info log as it seems to display incorrectly.
+
+<br/>
+
+<br/>
+
+# [1.1.2] 2021-08-18
+
+### Changed
+
+- bin/bgs.js
+  - Updated project info logs to use properties from package.json
+
+<br/>
+
+# [1.1.1] 2021-08-18
+
+## _This release fixed the issue of .gitignore copy resulting in error when user installs the project._
+
+<br/>
+
+### Fixed
+
+- .gitignore copy should now work
+
+<br/>
+
+# [1.1.0] 2021-08-18
+
+### Fix of .gitignore copy error attempted but failed.\_
+
+<br/>
+
+### Changed
+
+- db.js
+  - Refactored commented code
+- renderStoryScene.ts
+  - Changed color to yello
 
 <br/>
 
 # [1.0.2] 2021-08-17
+
 ### Added
+
 - CHANGELOG.md
+
 ### Changed
+
 - README.md
   - Added new sections:
     - Notes on Configuration
@@ -33,16 +85,20 @@ All notable changes to **`babylonjs-game-starter`** will be documented here.
 <br/>
 
 # [1.0.1] 2021-08-16
+
 ### Changed
+
 - bin/bgs.js
   - Removed unused imports
   - Added licence.md to files to skip
   - Added logging for argv and argv length
 
 ### Removed
+
 - /test-directory
 
 <br/>
 
 # [1.0.0] 2021-08-16
+
 ### First Release
