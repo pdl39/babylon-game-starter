@@ -14,12 +14,9 @@ const repoRoot = path.resolve(__dirname, '../'); // make sure to change the seco
 const packagejson = require(path.resolve(repoRoot, 'package.json'));
 const repo = packagejson.repository.url;
 
-// Copy .gitignore into a temporary file -> This is to address the npm issue of removing .gitignore.
-copyFile(repoRoot, repoRoot, '.gitignore', 'gitignore.txt');
-
 
 // Files to skip when calling copyFiles function (all in lower case).
-const dirsToSkip = ['.git', '.cache', 'node_modules', 'dist', 'bin'];
+const dirsToSkip = ['.git', '.cache', 'node_modules', 'dist', 'bin', 'temp'];
 const filesToSkip = ['changelog.md', 'license.md', 'readme.md', 'package.json', 'package-lock.json', '.gitignore'];
 const extToSkipAlways = ['.ds_store'];
 const extToSkipConditional = ['.js', '.js.map', '.d.ts'];
@@ -49,8 +46,7 @@ const appPath = path.resolve(cwd, appName);
 const appNameColored = `${TERM_COLORS.blue}<${appName}>${TERM_COLORS.reset}`;
 
 // Setup User Project
-setupProject()
-.then(() => runCommand(`rm -f ${repoRoot}/gitignore.txt`)); // Remove temporarily created .gitignore copy from the original repo upon user's project etup complete.
+setupProject();
 
 
 /* ------------------------------------------------------- */
@@ -106,8 +102,7 @@ async function setupProject() {
     logMessage(`Initializing git for ${appNameColored}...`);
     try {
       await runCommand(`cd ${appPath} && git init`);
-      await copyFile(repoRoot, appPath, `gitignore.txt`, `.gitignore`);
-      await runCommand(`rm -f ${appPath}/gitignore.txt`);
+      await copyFile(`${repoRoot}/temp`, appPath, `gitignore.txt`, `.gitignore`);
       logMessage(`git init success!\n`, 'cyan');
     }
     catch (err) {
