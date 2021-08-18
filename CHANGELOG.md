@@ -8,12 +8,23 @@ All notable changes to **`babylonjs-game-starter`** will be documented here.
 
 <br/>
 
+# [1.1.3] 2021-08-18
+
+### Changed
+
+- bin/bgs.js
+  - Removed 'by {packagejson.author}' in project info log as it seems to display incorrectly.
+
+<br/>
+
+<br/>
+
 # [1.1.2] 2021-08-18
 
 ### Changed
 
-- CHANGELOG.md
-  - Updated project info log at the end of installation to use properties from package.json
+- bin/bgs.js
+  - Updated project info logs to use properties from package.json
 
 <br/>
 
