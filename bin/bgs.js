@@ -112,9 +112,9 @@ async function setupProject() {
 
     logMessage(`Installation Success.\n`, 'green');
     logMessage(`Please refer to README.md at ${repo} on how to get started.\n`, 'green');
-    logMessage(`${packagejson.name} by ${packagejson.author}`, 'gray');
-    logMessage(`Published at npm (https://www.npmjs.com/package/babylonjs-game-starter)`, 'gray');
-    logMessage(`MIT Licence`, 'gray');
+    logMessage(`${packagejson.name} v${packagejson.version} by ${packagejson.author}`, 'gray');
+    logMessage(`Published at npm (https://www.npmjs.com/package/${packagejson.name})`, 'gray');
+    logMessage(`${packagejson.license} Licence`, 'gray');
     logMessage(`Copyright (c) ${new Date().getFullYear()} Peter Donghun Lee\n`, 'gray');
     logMessage(`Happy Coding :)`, 'brightGreen');
   }
