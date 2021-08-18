@@ -57,7 +57,7 @@ const renderStoryScene = async (canvas: HTMLCanvasElement, engine: Engine, curre
 
   // Mesh Highlight
   const hlSphere = new HighlightLayer('hlSphere', thisScene);
-  hlSphere.addMesh(sphere, new Color3(0.29, 0.95, 0.63));
+  hlSphere.addMesh(sphere, new Color3(0.96, 0.73, 0.04));
   // hlSphere.removeMesh(sphere);
 
   // --- GUI ---
@@ -69,7 +69,7 @@ const renderStoryScene = async (canvas: HTMLCanvasElement, engine: Engine, curre
   const button = Button.CreateSimpleButton('next', 'NEXT');
   button.width = 0.25;
   button.height = 0.07;
-  button.color = '#4AF2A1';
+  button.color = '#f5bb0a';
   button.top = '-5%';
   button.left = '-3%';
   button.thickness = 0.5;

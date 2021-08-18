@@ -13,15 +13,17 @@ const TERM_COLORS = require('../bin/termColors');
 const repoRoot = path.resolve(__dirname, '../'); // make sure to change the second argument as needed.
 const packagejson = require(path.resolve(repoRoot, 'package.json'));
 const repo = packagejson.repository.url;
-const currentYear = new Date().getFullYear();
+
+// Copy .gitignore into a temporary file -> This is to address the npm issue of removing .gitignore.
+copyFile(repoRoot, repoRoot, '.gitignore', 'gitignore.txt');
 
 
 // Files to skip when calling copyFiles function (all in lower case).
-const dirsToSkip = ['.git', '.cache', 'node_modules', 'dist', 'bin', 'newdirectory'];
+const dirsToSkip = ['.git', '.cache', 'node_modules', 'dist', 'bin'];
 const filesToSkip = ['changelog.md', 'license.md', 'readme.md', 'package.json', 'package-lock.json', '.gitignore'];
 const extToSkipAlways = ['.ds_store'];
 const extToSkipConditional = ['.js', '.js.map', '.d.ts'];
-const extSkipExceptionDirs = ['src', 'server']; // Directories in this list are exceptions for skipping certain extensions
+const extSkipExceptionDirs = ['src', 'server']; // Directories in this list are exceptions for skipping certain extensions.
 
 
 // If no argument is entered for project name, display a use case example.
@@ -46,7 +48,9 @@ const appPath = path.resolve(cwd, appName);
 
 const appNameColored = `${TERM_COLORS.blue}<${appName}>${TERM_COLORS.reset}`;
 
-setupProject();
+// Setup User Project
+setupProject()
+.then(() => runCommand(`rm -f ${repoRoot}/gitignore.txt`)); // Remove temporarily created .gitignore copy from the original repo upon user's project etup complete.
 
 
 /* ------------------------------------------------------- */
@@ -75,8 +79,8 @@ async function setupProject() {
       throw err;
     }
 
-    // Copy all files from origin repo to user's project directory
-    // This excludes .gitignore & package.json/package-lock.json
+    // Copy all files from origin repo to user's project directory.
+    // This excludes .gitignore & package.json/package-lock.json (which will be added later).
     logMessage(`Copying project files from ${repo}...`);
     try {
       await copyFiles(repoRoot, appPath);
@@ -87,7 +91,7 @@ async function setupProject() {
       throw err;
     }
 
-    // Overwrite package.json created from npm init with new package.json
+    // Overwrite package.json created from npm init with new package.json.
     logMessage(`Rewriting package.json for ${appNameColored}...`);
     try {
       await overwritePackageJson();
@@ -102,7 +106,8 @@ async function setupProject() {
     logMessage(`Initializing git for ${appNameColored}...`);
     try {
       await runCommand(`cd ${appPath} && git init`);
-      await copyFile(`.gitignore`, repoRoot, appPath);
+      await copyFile(repoRoot, appPath, `gitignore.txt`, `.gitignore`);
+      await runCommand(`rm -f ${appPath}/gitignore.txt`);
       logMessage(`git init success!\n`, 'cyan');
     }
     catch (err) {
@@ -114,7 +119,6 @@ async function setupProject() {
     logMessage(`Please refer to README.md at ${repo} on how to get started.\n`, 'green');
     logMessage(`${packagejson.name} by ${packagejson.author}`, 'gray');
     logMessage(`Published at npm (https://www.npmjs.com/package/babylonjs-game-starter)`, 'gray');
-    // logMessage(`(https://www.npmjs.com/package/babylonjs-game-starter)`, 'gray');
     logMessage(`MIT Licence`, 'gray');
     logMessage(`Copyright (c) ${new Date().getFullYear()} Peter Donghun Lee\n`, 'gray');
     logMessage(`Happy Coding :)`, 'brightGreen');
@@ -144,7 +148,7 @@ function logError(message, color = null) {
   }
 };
 
-// Helper function to be used to run exec commands
+// Helper function to be used to run exec commands.
 async function runCommand (command) {
   try {
     const { stdout, stderr } = await exec(command);
@@ -174,11 +178,14 @@ function makeAppDir() {
   }
 };
 
-function copyFile (fileName, srcDir, destDir) {
-  // using fs.create[Read/Write]Stream() can be more performant vs. fs.[read/write]File()
+// Copy a single file from source directory to a destination directory.
+// If destFileName is not entered, destination file name will be same as source file name.
+function copyFile (srcDir, destDir, srcFileName, destFileName = null) {
+  // Using fs.create[Read/Write]Stream() can be more performant vs. fs.[read/write]File()
   try {
-    const srcFile = fs.createReadStream(path.resolve(srcDir, fileName));
-    const destFile = fs.createWriteStream(path.resolve(destDir, fileName));
+    const destFileN = destFileName || srcFileName;
+    const srcFile = fs.createReadStream(path.resolve(srcDir, srcFileName));
+    const destFile = fs.createWriteStream(path.resolve(destDir, destFileN));
     srcFile.on('open', function() {
       srcFile.pipe(destFile);
     });
@@ -191,7 +198,7 @@ function copyFile (fileName, srcDir, destDir) {
   }
 };
 
-// Recursive function to be used to copy all required files and subdirectories(recursive) from the original repo to the user's new project repo
+// Recursive function to be used to copy all required files and subdirectories(recursive) from the original repo to the user's new project repo.
 async function copyFiles (srcDir, destDir, extSkipExcepDir = null) {
   try {
     const dirEntries = await fsPromises.readdir(srcDir, { withFileTypes: true });
@@ -200,8 +207,6 @@ async function copyFiles (srcDir, destDir, extSkipExcepDir = null) {
       // skip any files/directories that need to be skipped.
       if (dirsToSkip.includes(dirEntry.name.toLowerCase())) continue;
       if (filesToSkip.includes(dirEntry.name.toLowerCase())) continue;
-
-      // console.log(`${TERM_COLORS.brightCyan} ${dirEntry.name}: dir? ${dirEntry.isDirectory()} ${TERM_COLORS.reset}`);
 
       // If dirEntry is a file, copy the file to user's project directory.
       if (dirEntry.isFile()) {
@@ -220,11 +225,11 @@ async function copyFiles (srcDir, destDir, extSkipExcepDir = null) {
           ) continue;
         }
 
-        // Copy files from original repo to user's project directory
-        copyFile(dirEntry.name, srcDir, destDir);
+        // Copy files from original repo to user's project directory.
+        copyFile(srcDir, destDir, dirEntry.name);
       }
 
-      // If dirEntry is a (sub)directory, recursively call copyNecessaryFiles on the subdirectory
+      // If dirEntry is a (sub)directory, recursively call copyNecessaryFiles on the subdirectory.
       else if (dirEntry.isDirectory()) {
         const srcSubDir = path.resolve(srcDir, dirEntry.name);
         const destSubDir = path.resolve(destDir, dirEntry.name);
@@ -240,17 +245,15 @@ async function copyFiles (srcDir, destDir, extSkipExcepDir = null) {
         try {
           // If current recursive call has an exception directory passed down from a previous call,
           // continue to pass it down.
+          // Will not await copyFiles calls so that we can copy all files asynchronously
           if (extSkipExcepDir) {
             copyFiles(srcSubDir, destSubDir, extSkipExcepDir);
-            // will not await so that we can copy all files asynchronously
           }
           else if (newExtSkipExcepDir) {
             copyFiles(srcSubDir, destSubDir, newExtSkipExcepDir);
-            // will not await so that we can copy all files asynchronously
           }
           else {
             copyFiles(srcSubDir, destSubDir);
-            // will not await so that we can copy all files asynchronously
           }
         }
         catch (err) {
