@@ -28,20 +28,20 @@ if (process.argv.length < 3) {
   logError(`Please provide a name for your project.`, 'red');
   logError(`Use case example: `, 'gray');
   logError(`    npx ${packagejson.name} my-app`, 'gray');
-  // process.exit(1);
+  process.exit(1);
 }
 
 
 // process.cwd() is used to identify the current working directory of the user's project.
 // (to be differentiated from the oritinal repo's root directory, which was identified above with __dirname)
-// const cwd = fs.realpathSync(process.cwd());
-// const appName = process.argv[2];
-// const appPath = path.resolve(cwd, appName);
+const cwd = fs.realpathSync(process.cwd());
+const appName = process.argv[2];
+const appPath = path.resolve(cwd, appName);
 
 // FOR LOCAL TESTING:
-const cwd = '/Users/pdl39/projects/npxBuildTest';
-const appName = 'new-app';
-const appPath = path.resolve(cwd, appName);
+// const cwd = '/Users/pdl39/projects/npxBuildTest';
+// const appName = 'new-app';
+// const appPath = path.resolve(cwd, appName);
 
 const appNameColored = `${TERM_COLORS.blue}<${appName}>${TERM_COLORS.reset}`;
 
