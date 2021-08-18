@@ -71,7 +71,7 @@ npm run build
 
 <br/>
 
-## Notes of Configuration
+## Notes on Configuration
 If you decide to change certain property names and values in `package.json` (e.g. `main, html, fallback, favicon, etc.`) or change the name/location of the main project file (which is set to `game/index.ts`), please make sure to update the relevant configurations in webpack accordingly.
 
 <br/>
