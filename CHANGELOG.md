@@ -4,19 +4,36 @@ All notable changes to **`babylonjs-game-starter`** will be documented here.
 
 <br/>
 
-# [Unreleased] ~2021-08-18
+# [Unreleased] ~
 
 <br/>
 
-# [1.1.0] 2021-08-18
+# [1.1.2] 2021-08-18
 
-### _This release fixed the issue of .gitignore copy resulting in error when user installs the project._
+### Changed
+
+- CHANGELOG.md
+  - Updated project info log at the end of installation to use properties from package.json
+
+<br/>
+
+# [1.1.1] 2021-08-18
+
+## _This release fixed the issue of .gitignore copy resulting in error when user installs the project._
 
 <br/>
 
 ### Fixed
 
 - .gitignore copy should now work
+
+<br/>
+
+# [1.1.0] 2021-08-18
+
+### Fix of .gitignore copy error attempted but failed.\_
+
+<br/>
 
 ### Changed
 
