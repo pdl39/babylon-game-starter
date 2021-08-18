@@ -54,8 +54,8 @@ To start the development server, run:
 npm start
 ```
 - This will run two different scripts:
-  - webpack serve --config webpack.dev.js
-  - nodemon server/server.js
+  - `webpack serve --config webpack.dev.js`
+  - `nodemon server/server.js`
 - Development server has been designed to run two separate servers:
   - Webpack Dev Server for frontend (at PORT 3030)
   - Express Server for backend APIs (at PORT 8080)
@@ -77,46 +77,19 @@ If you decide to change certain property names and values in `package.json` (e.g
 <br/>
 
 ## Requirements:
-(as of 2021.08.17)
+(as of 2021.08.18)
 - *LTS versions of node & npm*
-  - node v.14.17.5
-  - npm v.6.14.14
+  - node ~v.14.17.5
+  - npm ~v.6.14.14
   - Other versions of node & npm have not yet been tested other than v.15.4.0, which is known to fail.
   - Using LTS version is recommended.
 
 <br/>
 
 ## Current Known Issues
-(as of 2021.08.17):
+(as of 2021.08.18):
 - *Install fails on node v.15.4.0*
   - Other variations of v15 have not been tested
-- *`.gitgnore` copy fails with Error: ENOENT and generates an empty file*
-  - As a temporary fix, please paste the following into the generated empty `.gitignore` file:
-  ```
-  .DS_Store
-  .cache
-  *.Cache
-
-  node_modules
-  *bundle.js*
-
-  # Private files including .env files
-  .env
-
-  # Ignore all build generated files in the root dist directory except for index.html
-  /dist/*
-  !/dist/index.html
-
-  # .js | .js.map | .d.ts files (for Typescript Project)
-  src/**/*.js*
-  game/**/*.js*
-  game/**/*.d.ts
-
-  /assets/*
-  !/assets/favicon/
-  /assets/favicon/*
-  !/assets/favicon/favicon.ico
-  ```
 
 <br/>
 
